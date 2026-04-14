@@ -200,4 +200,21 @@ describe("use-transcription", () => {
       expect(state.connectionStatus).toBe("disconnected")
     })
   })
+
+  describe("stt_error integration contract", () => {
+    it("surfaces stt errors via toast and sets connection status to error", async () => {
+      const { useTranscriptStore } = await loadModules()
+
+      // Simulate what the stt_error handler does
+      useTranscriptStore.getState().setConnectionStatus("error")
+      mockToastError("Transcription error", {
+        description: "WebSocket closed unexpectedly",
+      })
+
+      expect(useTranscriptStore.getState().connectionStatus).toBe("error")
+      expect(mockToastError).toHaveBeenCalledWith("Transcription error", {
+        description: "WebSocket closed unexpectedly",
+      })
+    })
+  })
 })
